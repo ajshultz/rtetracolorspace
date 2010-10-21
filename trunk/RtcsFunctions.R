@@ -11,16 +11,32 @@ stim <- function(R,C){
 	wlC <- C[,1]
 	
 	#Interpolation of R based on the wavelengths of C
-	RapproxC <- apply(X=R[-1], MARGIN=2, FUN = function(xcol){approx(x=wlR,y=xcol,xout=wlC)$y})
+	#RapproxC <- apply(X=R[-1], MARGIN=2, FUN = function(xcol){approx(x=wlR,y=xcol,xout=wlC)$y})
+	CapproxR <- apply(X=C[-1], MARGIN=2, FUN = function(xcol){approx(x=wlC,y=xcol,xout=wlR,method="constant")$y})
 
-	result <- matrix(nrow=ncol(RapproxC),ncol=ncol(C)-1)
+#	result <- matrix(nrow=ncol(RapproxC),ncol=ncol(R)-1)
+#
+#	rownames(result)<-colnames(R[-1])
+#	colnames(result)<-c(colnames(C[-1]))
+#	for (i in 1:ncol(RapproxC)) {
+#		for (j in 2:ncol(C)){
+#			prod <- RapproxC[,i]*C[,j]
+#			result[i,j-1]<-trapz(wlC,prod)
+#			}
+#		}
+
+	result <- matrix(nrow=ncol(R)-1,ncol=ncol(C)-1)
+	R <- R[apply(CapproxR,1,FUN=function(row){!(any(is.na(row)))}),]
+	CapproxR <- CapproxR[apply(CapproxR,1,FUN=function(row){!(any(is.na(row)))}),]
+
+	wlR <- R[,1]
 
 	rownames(result)<-colnames(R[-1])
 	colnames(result)<-c(colnames(C[-1]))
-	for (i in 1:ncol(RapproxC)) {
-		for (j in 2:ncol(C)){
-			prod <- RapproxC[,i]*C[,j]
-			result[i,j-1]<-trapz(wlC,prod)
+	for (i in 2:ncol(R)) {
+		for (j in 1:ncol(CapproxR)){
+			prod <- R[,i]*CapproxR[,j]
+			result[i-1,j]<-trapz(wlR,prod)
 			}
 		}
 	result <- result/rowSums(result)
