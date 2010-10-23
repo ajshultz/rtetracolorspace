@@ -19,4 +19,4 @@ for (i in 1:length(files)){
 rownames(patchsumm)<-spe
 colnames(patchsumm)<-c("AvgSpan","VarSpan","MaxSpan","Volume","AvgHueDisp","VarHueDisp","MaxHueDisp","AvgBrill","AvgChroma","AvgAchChroma")
 
-write.csv(patchsumm, file="RTCS_PatchSum_take2.csv")
+write.csv(patchsumm, file="RTCS_PatchSum.csv")
