@@ -11,34 +11,35 @@ stim <- function(R,C){
 	wlC <- C[,1]
 	
 	#Interpolation of R based on the wavelengths of C
-	#RapproxC <- apply(X=R[-1], MARGIN=2, FUN = function(xcol){approx(x=wlR,y=xcol,xout=wlC)$y})
-	CapproxR <- apply(X=C[-1], MARGIN=2, FUN = function(xcol){approx(x=wlC,y=xcol,xout=wlR,method="constant")$y})
+	RapproxC <- apply(X=R[-1], MARGIN=2, FUN = function(xcol){approx(x=wlR,y=xcol,xout=wlC,method="constant")$y})
+#	CapproxR <- apply(X=C[-1], MARGIN=2, FUN = function(xcol){approx(x=wlC,y=xcol,xout=wlR,method="constant")$y})
 
-#	result <- matrix(nrow=ncol(RapproxC),ncol=ncol(R)-1)
-#
-#	rownames(result)<-colnames(R[-1])
-#	colnames(result)<-c(colnames(C[-1]))
-#	for (i in 1:ncol(RapproxC)) {
-#		for (j in 2:ncol(C)){
-#			prod <- RapproxC[,i]*C[,j]
-#			result[i,j-1]<-trapz(wlC,prod)
-#			}
-#		}
-
-	result <- matrix(nrow=ncol(R)-1,ncol=ncol(C)-1)
-	R <- R[apply(CapproxR,1,FUN=function(row){!(any(is.na(row)))}),]
-	CapproxR <- CapproxR[apply(CapproxR,1,FUN=function(row){!(any(is.na(row)))}),]
-
-	wlR <- R[,1]
+	result <- matrix(nrow=ncol(RapproxC),ncol=ncol(C)-1)
 
 	rownames(result)<-colnames(R[-1])
 	colnames(result)<-c(colnames(C[-1]))
-	for (i in 2:ncol(R)) {
-		for (j in 1:ncol(CapproxR)){
-			prod <- R[,i]*CapproxR[,j]
-			result[i-1,j]<-trapz(wlR,prod)
+	
+	for (i in 1:ncol(RapproxC)) {
+		for (j in 2:ncol(C)){
+			prod <- RapproxC[,i]*C[,j]
+			result[i,j-1]<-trapz(wlC,prod)
 			}
 		}
+
+#	result <- matrix(nrow=ncol(R)-1,ncol=ncol(C)-1)
+#	R <- R[apply(CapproxR,1,FUN=function(row){!(any(is.na(row)))}),]
+#	CapproxR <- CapproxR[apply(CapproxR,1,FUN=function(row){!(any(is.na(row)))}),]
+#
+#	wlR <- R[,1]
+#
+#	rownames(result)<-colnames(R[-1])
+#	colnames(result)<-c(colnames(C[-1]))
+#	for (i in 2:ncol(R)) {
+#		for (j in 1:ncol(CapproxR)){
+#			prod <- R[,i]*CapproxR[,j]
+#			result[i-1,j]<-trapz(wlR,prod)
+#			}
+#		}
 	result <- result/rowSums(result)
 	
 	#As in tetracolorspace refelctance spectra with a normalized brilliance less than 0.05 are set in the achromatic center.
@@ -199,8 +200,12 @@ colorSpan <- function(refcart){
 
 #Given a matrix of color spans, this produces a summary, the mean, variance, and maximum span.
 summary.colorSpan <- function(colorspan){
-	mean <- mean(colorspan[lower.tri(colorspan[colorspan != 0])])
-	var <- sd(colorspan[lower.tri(colorspan[colorspan != 0])])^2
+	
+	lowertri <- colorspan[lower.tri(colorspan)]
+	colorspan <- lowertri[lowertri>0]
+	
+	mean <- mean(colorspan)
+	var <- sd(colorspan)^2
 	max <- max(colorspan)
 	
 	summary <- c(mean,var,max)
@@ -224,9 +229,12 @@ hueDisp <- function(refsphere){
 
 #Given a matrix of hue disparities, this finds the mean, variance, and maximum disparity.
 summary.hueDisp <- function(huedisp){
-	mean <- mean(huedisp[lower.tri(huedisp[huedisp != 0])])
-	var <- sd(huedisp[lower.tri(huedisp[huedisp != 0])])^2
-	max <- max(huedisp)
+	lowertri <- huedisp[lower.tri(huedisp)]
+	hue <- lowertri[lowertri>0]
+	
+	mean <- mean(hue)
+	var <- sd(hue)^2
+	max <- max(hue)
 	
 	summary <- c(mean,var,max)
 	names(summary) <- c("mean","var","max")
