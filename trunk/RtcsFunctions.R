@@ -198,6 +198,32 @@ colorSpan <- function(refcart){
 	return(result)
 	}
 
+colorSpanSingle <- function(cartvec1,cartvec2){
+		edist <- sqrt((cartvec1[1]-cartvec2[1])^2+(cartvec1[2]-cartvec2[2])^2+(cartvec1[3]-cartvec2[3])^2)
+		return(edist)
+}
+colorSpanBi <- function(refcart1,refcart2,matchOnly=FALSE){
+	
+	euclidean <- function(cartvec1,cartvec2){
+		edist <- sqrt((cartvec1[1]-cartvec2[1])^2+(cartvec1[2]-cartvec2[2])^2+(cartvec1[3]-cartvec2[3])^2)
+		return(edist)
+		}
+	
+	result <- matrix(nrow=nrow(refcart1),ncol=nrow(refcart2))
+
+	for (i in 1:nrow(refcart1)){
+		for (j in 1:nrow(refcart2)){
+			result[i,j] <- euclidean(refcart1[i,],refcart2[j,])
+		}
+	}
+	
+	rownames(result) <- rownames(refcart1)
+	colnames(result) <- rownames(refcart2)
+	return(result)	
+}	
+	
+
+
 #Given a matrix of color spans, this produces a summary, the mean, variance, and maximum span.
 summary.colorSpan <- function(colorspan){
 	
