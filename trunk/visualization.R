@@ -41,8 +41,8 @@ plotPoints <- function(coordinates, point.color="black", type="sphere", sphere.r
 	
 }
 
-connectPoints <- function(points1, points2, line.color="black"){
+connectPoints <- function(points1, points2, line.color="black", line.width=1){
 	for(i in 1:(dim(points1)[1])){
-		lines3d(c(points1[i,1],points2[i,1]), c(points1[i,2],points2[i,2]), c(points1[i,3],points2[i,3]),color=line.color)
+		lines3d(c(points1[i,1],points2[i,1]), c(points1[i,2],points2[i,2]), c(points1[i,3],points2[i,3]),color=line.color,lwd=line.width)
 	}
 }
