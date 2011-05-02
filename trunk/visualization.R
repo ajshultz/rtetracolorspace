@@ -13,7 +13,7 @@ drawTcs <- function(bg.color="white", line.color="black", label.color=line.color
 	rgl.texts(cartVertices[3,]*(label.offset+1),text="m",color=label.color,adj=0.5, family=label.family, font=label.font, cex=label.cex, useFreeType= label.useFreeType)
 	rgl.texts(cartVertices[4,]*(label.offset+1),text="l",color=label.color,adj=0.5, family=label.family, font=label.font, cex=label.cex, useFreeType= label.useFreeType)
 	
-	view3d(theta=view.theta,phi=view.phi,fov=view.fov)
+	view3d(theta=view.theta,phi=view.phi,fov=view.fov,zoom=.7)
 
 	
 	
@@ -46,3 +46,9 @@ connectPoints <- function(points1, points2, line.color="black", line.width=1){
 		lines3d(c(points1[i,1],points2[i,1]), c(points1[i,2],points2[i,2]), c(points1[i,3],points2[i,3]),color=line.color,lwd=line.width)
 	}
 }
+
+plotVolume <- function(coordinates,volume.color="blue"){
+	require(geometry)
+	poly <- t(convhulln(coordinates))
+	rgl.triangles(mrefcar[poly,1],mrefcar[poly,2],mrefcar[poly,3],col=volume.color,alpha=.2)
+	}
