@@ -50,5 +50,5 @@ connectPoints <- function(points1, points2, line.color="black", line.width=1){
 plotVolume <- function(coordinates,volume.color="blue"){
 	require(geometry)
 	poly <- t(convhulln(coordinates))
-	rgl.triangles(mrefcar[poly,1],mrefcar[poly,2],mrefcar[poly,3],col=volume.color,alpha=.2)
+	rgl.triangles(coordinates[poly,1],coordinates[poly,2],coordinates[poly,3],col=volume.color,alpha=.2)
 	}
