@@ -48,3 +48,26 @@ avgBrill(normbrill)
 
 #A number of summary measurements from all patches submitted (Average color span, variance in color span, maximum color span, color volume, average hue disparity, variance in hue disparity, maximum hue disparity, average brilliance, average chroma, and average acheived chroma)
 summaryOfpatches(refs,ss)
+
+##Visualize the TCS data:
+#Note, you must have X11 installed. If you have a new version of OSX, you must install this directly from the XQuartz website.
+library(rgl)
+source("visualization.R")
+
+#Draw an emplty TCS, note that this is an interactive plot you can change with your mouse.
+drawTcs()
+
+#Populate with points:
+plotPoints(refcart,point.color="blue")
+
+#Connect points with a line (note, points must be far enough apart to see.)
+connectPoints(points1=refcart[1:4,],points2=refcart[5:8,],line.color = "black")
+
+#New TCS
+drawTcs()
+
+#Plot color volume
+plotVolume(refcart)
+
+#Save current plot
+rgl.snapshot(filename="MFPointsPlotted_ChlNit.png")
